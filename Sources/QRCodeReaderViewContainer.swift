@@ -41,16 +41,17 @@ public protocol QRCodeReaderDisplayable {
   var toggleTorchButton: UIButton? { get }
 
   /// A guide view upon the camera view
-  var overlayView: UIView? { get }
+  var overlayView: QRCodeReaderViewOverlay? { get }
+
+  /// Notify the receiver to update its orientation.
+  func setNeedsUpdateOrientation()
 
   /**
-   Method called by the container to allows you to layout your view properly using the given flags.
-   
-   - Parameter showCancelButton: Flag to know whether you should display the cancel button.
-   - Parameter showSwitchCameraButton: Flag to know whether you should display the switch camera button.
-   - Parameter showTorchButton: Flag to know whether you should display the toggle torch button.
+   Method called by the container to allows you to layout your view properly using the QR code reader builder.
+
+   - Parameter builder: A QR code reader builder.
    */
-  func setupComponents(showCancelButton: Bool, showSwitchCameraButton: Bool, showTorchButton: Bool, showOverlayView: Bool)
+  func setupComponents(with builder: QRCodeReaderViewControllerBuilder)
 }
 
 /// The `QRCodeReaderContainer` structure embed the view displayed by the controller. The embeded view must be conform to the `QRCodeReaderDisplayable` protocol.
@@ -60,7 +61,7 @@ public struct QRCodeReaderContainer {
 
   /**
    Creates a QRCode container object that embeds a given displayable view.
-   
+
    - Parameter displayable: An UIView conforms to the `QRCodeReaderDisplayable` protocol.
    */
   public init<T: QRCodeReaderDisplayable>(displayable: T) where T: UIView {
@@ -70,7 +71,7 @@ public struct QRCodeReaderContainer {
 
   // MARK: - Convenience Methods
 
-  func setupComponents(showCancelButton: Bool, showSwitchCameraButton: Bool, showTorchButton: Bool, showOverlayView: Bool) {
-    displayable.setupComponents(showCancelButton: showCancelButton, showSwitchCameraButton: showSwitchCameraButton, showTorchButton: showTorchButton, showOverlayView: showOverlayView)
+  func setupComponents(with builder: QRCodeReaderViewControllerBuilder) {
+    displayable.setupComponents(with: builder)
   }
 }
